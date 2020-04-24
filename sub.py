@@ -8,8 +8,8 @@ class Sub(Movement, Fade):
 		self.range = range
 		# Movement(x, y, max_speed, acceleration, decelerate)
 		Movement.__init__(self, x, y, 1.8, 0.105, 0.955)
-		#Fade(color, time_fade)
-		Fade.__init__(self, color, time_fade)
+		#Fade(color, time_fade, start_fadein)
+		Fade.__init__(self, color, time_fade, True)
 		# statistics
 		self.time = 0
 		self.sec = 0
@@ -30,6 +30,6 @@ class Sub(Movement, Fade):
 			self.sec += 1
 
 	def render(self, window):
-		x = self.x + self.size/2
-		y = self.y + self.size/2
+		x = self.x - self.size/2
+		y = self.y - self.size/2
 		pygame.draw.rect(window, self.color, (x, y, self.size, self.size))

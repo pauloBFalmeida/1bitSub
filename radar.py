@@ -26,13 +26,12 @@ class Radar:
 		self.angle = endAngle % 360
 
 
-
 class Dot(Fade):
-	def __init__(self, x, y, color, size, time_fade):
+	def __init__(self, x, y, color, size, time_fade, start_fadein):
 		self.x = x
 		self.y = y
 		self.size = size
-		Fade.__init__(self, color, time_fade)
+		Fade.__init__(self, color, time_fade, start_fadein)
 
 	def render(self, window):
 		pygame.draw.circle(window, self.color, (int(self.x), int(self.y)), self.size)

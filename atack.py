@@ -1,13 +1,5 @@
-import pygame
-# import sub, enemy
-from random import randint
-from sub import Sub
-from enemy import Enemy
-from radar import Radar, Dot
-pygame.init()
-
-class Py1bitSub:
-	def __init__(self, width, height, title):
+class Atack:
+	def __init__(self, atack_time, atack_cooldown, title):
 		self.width = width
 		self.height = height
 		self.win = pygame.display.set_mode((width, height))

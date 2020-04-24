@@ -1,109 +1,51 @@
 import pygame
-# from math import cos, sin, radians
+from movement import Movement
+from fade import Fade
 
-class Enemy:
-	def __init__(self, x, y, color, size):
-		self.x = x
-		self.y = y
-
-		self.x_speed = 0
-		self.y_speed = 0
+class Enemy(Movement, Fade):
+	def __init__(self, x, y, type, color, size, time_fade, sub):
+		self.type = type
+		self.size = size
+		self.sub = sub
+		max_speed, accel, decel, self.range, self.life = self.type_attributes(type, size)
 
 		# Movement(x, y, max_speed, acceleration, decelerate)
-		# self.mov = Movement(x, y, 2, 0.15, 0.96)
+		Movement.__init__(self, x, y, max_speed, accel, decel)
+		#Fade(color, time_fade)
+		Fade.__init__(self, color, time_fade, False)
 
-		self.max_speed = 2
-		self.decelerate = 0.96
-		self.acceleration = 0.15
+	def take_damage(self):
+		self.life -= 1
+	def is_alive(self):
+		return self.life > 0
 
-		self.color = color
-		self.size = size
+	# max_speed, accel, decel, range, life
+	def type_attributes(self, type, size):
+		if  type == 0:	#boss
+			self.size = self.size * 4
+			return (1, 0.105, 0.955, self.size, 3)
+		elif type == 1:	# fast one
+			return (2, 0.12, 0.98, size*1, 1)
+		elif type == 2:	# normal
+			return (1.8, 0.105, 0.955, size*2, 1)
+		else:# type 3	# slow
+			return (1.5, 0.105, 0.945, size*3, 1)
 
-		# self.collider_lines = []
-
-
-	# def handle_collision(self):
-	# 	self.x = self.old_x
-	# 	self.y = self.old_y
-	# 	self.speed = 0
-	#
-	#
-	# def update_vertices(self):
-	# 	# Vertices in Polar Coordinates for easier rotation
-	# 	self.vertices_polar = [
-	# 		(self.v_angle1 + self.hdg, self.vertex_distance),
-	# 		(self.v_angle2 + self.hdg, self.vertex_distance),
-	# 		(self.v_angle3 + self.hdg, self.vertex_distance),
-	# 		(self.v_angle4 + self.hdg, self.vertex_distance)
-	# 	]
-	#
-	# 	self.vertices_cartesian = []
-	#
-	# 	# Conversion of Polar Coordinates to Cartesian Coordinates for rendering
-	# 	for vertex in self.vertices_polar:
-	# 		x = cos(radians(vertex[0])) * vertex[1] + self.x
-	# 		y = sin(radians(vertex[0])) * vertex[1] + self.y
-	# 		self.vertices_cartesian.append((x, y))
-	#
-	#
-	# def update_colliders(self):
-	# 	v = self.vertices_cartesian
-	# 	self.collider_lines = []
-	#
-	# 	for i in range(len(v)):
-	# 		if i == len(v) - 1:
-	# 			point1 = (v[i][0], v[i][1])
-	# 			point2 = (v[0][0], v[0][1])
-	# 		else:
-	# 			point1 = (v[i][0], v[i][1])
-	# 			point2 = (v[i+1][0], v[i+1][1])
-	#
-	# 		line = (point1, point2)
-	# 		self.collider_lines.append(line)
-	#
-	#
-	# def rotate(self, angle):
-	# 	self.hdg += angle
-	#
-	#
-	def accelerate(self, x_speed, y_speed):
-		# vertex x
-		if abs(self.x_speed) < self.max_speed:
-			self.x_speed += x_speed * self.acceleration
-		# vertex y
-		if abs(self.y_speed) < self.max_speed:
-			self.y_speed += y_speed * self.acceleration
+	def calc_direction(self):
+		x_speed = 1 if (self.sub.x - self.x) > 0 else -1
+		y_speed = 1 if (self.sub.y - self.y) > 0 else -1
+		return (x_speed, y_speed)
 
 	def update(self):
-		self.x += self.x_speed
-		self.y += self.y_speed
+		x_speed, y_speed = 0,0
+		x_speed, y_speed = self.calc_direction()
+		Movement.accelerate(self, x_speed, y_speed)
+		Movement.update(self)
+		Fade.update(self)
 
-		self.x_speed *= self.decelerate
-		self.y_speed *= self.decelerate
-
-		if abs(self.x_speed) < 0.1: self.x_speed = 0
-		if abs(self.y_speed) < 0.1: self.y_speed = 0
-
-
-	# 	self.old_x = self.x
-	# 	self.old_y = self.y
-	# 	self.old_hdg = self.hdg
-	#
-	# 	self.x_vel = cos(radians(self.hdg)) * self.speed
-	# 	self.y_vel = sin(radians(self.hdg)) * self.speed
-	#
-	# 	self.x += self.x_vel
-	# 	self.y += self.y_vel
-	#
-	# 	self.update_vertices()
-	# 	self.update_colliders()
-	#
 
 	def render(self, window):
-		# Render Car
-		pygame.draw.rect(window, self.color, (self.x, self.y, self.size, self.size))
-
-		# # Render car tires
-		# tire_radius = self.vertex_distance * 0.2
-		# for vertex in self.vertices_cartesian:
-		# 	pygame.draw.ellipse(window, (0, 0, 0), (vertex[0]-tire_radius, vertex[1]-tire_radius, tire_radius * 2, tire_radius * 2))
+		x = self.x - self.size/2
+		y = self.y - self.size/2
+		pygame.draw.rect(window, self.color, (x, y, self.size, self.size))
+		pygame.draw.rect(window, (255,0,0), (self.x, self.y, 1, 1))	# test

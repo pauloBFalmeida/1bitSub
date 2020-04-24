@@ -1,8 +1,7 @@
 class Fade:
-	def __init__(self, color, time_fade):
+	def __init__(self, color, time_fade, start_fadein):
 		self.orignal_color = color
-		# self.color = (0,0,0)
-		self.color = color
+		self.color = color if start_fadein else (0,0,0)
 		if time_fade == 0:
 			self.fadeout = (0,0,0)
 		else:
