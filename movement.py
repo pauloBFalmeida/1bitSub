@@ -1,7 +1,7 @@
 class Movement:
 	def __init__(self, x, y, max_speed, acceleration, decelerate):
 		self.x = x
-		self.y = y
+		self.y = y		
 		self.x_speed = 0
 		self.y_speed = 0
 
