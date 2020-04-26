@@ -1,5 +1,4 @@
 import pygame
-# import sub, enemy
 from random import randint
 from sub import Sub
 from enemy import Enemy
