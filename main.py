@@ -231,12 +231,13 @@ class Py1bitSub:
 
 
 	def wait_to_start(self):
-		font = pygame.font.SysFont("calibri", 30)
+		font = pygame.font.SysFont("calibri", 40)
 		text = font.render("Press G to start", True, self.color)
 		x = self.width//2 - text.get_width()//2
 		y = self.height//4 - text.get_height()//2
 		self.win.blit(text, (x,y))
 
+		font = pygame.font.SysFont("calibri", 30)
 		text = font.render("use wasd to move", True, self.color)
 		x = self.width//2 - text.get_width()//2
 		y = self.height//2 - text.get_height()//2
@@ -247,9 +248,15 @@ class Py1bitSub:
 		y = self.height//2 + text.get_height()//2
 		self.win.blit(text, (x,y))
 
+		font = pygame.font.SysFont("calibri", 17)
 		text = font.render("press C to open game settings on terminal", True, self.color)
 		x = self.width//2 - text.get_width()//2
-		y = self.height*2//3 + text.get_height()//2
+		y = self.height - text.get_height()*5
+		self.win.blit(text, (x,y))
+
+		text = font.render("made by Paulo BF Almeida", True, self.color)
+		x = self.width//2 - text.get_width()//2
+		y = self.height - text.get_height()*2
 		self.win.blit(text, (x,y))
 
 		pygame.display.update()
