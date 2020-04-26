@@ -17,3 +17,6 @@ they are slow and strong but get damage from your bomb,
 
 # required
 python3 and pygame
+
+# Run
+open the terminal, go in the folder and run 'python main.py'
