@@ -4,9 +4,9 @@ import math
 from fade import Fade
 
 class Radar:
-	def __init__(self, x_center, y_center, add_angle, dot_list, enemy_list):
-		self.x_center = x_center
-		self.y_center = y_center
+	def __init__(self, sub, range, add_angle, dot_list, enemy_list):
+		self.sub = sub
+		self.range = range
 		self.add_angle = add_angle
 		self.angle = 0
 		self.dot_list = dot_list
@@ -17,14 +17,15 @@ class Radar:
 		startAngle = self.angle
 		endAngle   = self.angle + self.add_angle
 		for obj in render_list:
-			x = obj.x - self.x_center
-			y = obj.y - self.y_center
+			x = obj.x - self.sub.x
+			y = obj.y - self.sub.y
 			# is inside 2D cone
 			angle = math.atan2(y,x)*180/ math.pi
 			angle += 180
 			me = 5 #margin of error
 			if (angle+me >= startAngle and angle-me <= endAngle):
-				obj.fadein()
+				if (x**2 + y**2)**(1/2) < self.range:	# distance
+					obj.fadein()
 		#
 		self.angle = endAngle % 360
 

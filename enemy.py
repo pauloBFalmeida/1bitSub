@@ -63,13 +63,13 @@ class Enemy(Movement, Fade, Atack):
 	# atack_time, reaction, range, fadeout_time_atack
 	def atack_attributes(self, type):
 		if  type == 0:	#boss
-			return (4, 20, self.size*1.5, 35)
+			return (4, 25, self.size*1.5, 35)
 		elif type == 1:	# fast and little
 			return (2, 0,self.size*1.5, 25)
 		elif type == 2:	# normal
 			return (5, 5,self.size*2.5, 40)
 		else:# type 3	# slow and big
-			return (6, 10,self.size*2.5, 45)
+			return (6, 20,self.size*2.5, 45)
 
 	def in_range(self):
 		dist = (self.x - self.sub.x)**2 + (self.y - self.sub.y)**2

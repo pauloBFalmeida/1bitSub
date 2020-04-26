@@ -22,6 +22,7 @@ class Py1bitSub:
 		self.difficulty = 0
 
 		self.time_radar = self.FPS * 4 	# seconds to complete a cicle
+		self.range_radar = 250
 		self.time_fadeout = 200
 		self.n_dots = 25				# this will be squared
 
@@ -64,7 +65,7 @@ class Py1bitSub:
 		self.dot_list = []
 		for i in range(qtd):
 			for j in range(qtd):
-				# Dot(x, y, color, size, time_fade)
+				# Dot(x, y, color, size, time_fade, start_fadein)
 				self.dot_list.append(Dot(
 									width*j+width//2,
 									height*i+height//2,
@@ -72,10 +73,10 @@ class Py1bitSub:
 									0,
 									self.time_fadeout, False))
 			# create radar
-		# Radar(x_center, y_center, add_angle, dot_list, enemy_list)
+		# Radar(sub, range, add_angle, dot_list, enemy_list)
 		self.radar = Radar(
-						x_center,
-						y_center,
+						self.sub,
+						self.range_radar,
 						360/self.time_radar,
 						self.dot_list,
 						self.enemy_list)
@@ -155,16 +156,16 @@ class Py1bitSub:
 	def input(self, keys):
 		margin = 15
 		# Player Controls
-		if keys[pygame.K_a]:
+		if keys[pygame.K_a] or keys[pygame.K_LEFT]:
 			if self.sub.x > 0 + margin:
 				self.sub.accelerate(-1,0)
-		if keys[pygame.K_d]:
+		if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
 			if self.sub.x < self.width - margin:
 				self.sub.accelerate(1,0)
-		if keys[pygame.K_w]:
+		if keys[pygame.K_w] or keys[pygame.K_UP]:
 			if self.sub.y > 0 + margin:
 				self.sub.accelerate(0,-1)
-		if keys[pygame.K_s]:
+		if keys[pygame.K_s] or keys[pygame.K_DOWN]:
 			if self.sub.y < self.height - margin:
 				self.sub.accelerate(0,1)
 		if keys[pygame.K_SPACE]:
@@ -190,12 +191,12 @@ class Py1bitSub:
 
 	def render(self, window):
 		window.fill(self.background)		# background
+		for dot in self.dot_list:			# radar dots
+			dot.render(window)
 		for temp in self.temporary_list:	# explosions
 			temp[1].render(window)
 		for enemy in self.enemy_list:		# enemies
 			enemy.render(window)
-		for dot in self.dot_list:			# radar dots
-			dot.render(window)
 		self.sub.render(window)				# player
 		self.stats(window)					# stats
 		pygame.display.update()				# update screen
@@ -207,7 +208,8 @@ class Py1bitSub:
 			print("type: /quit to save and leave settings")
 			print("/n_dots to change number of dots in radar")
 			print("/lifes to change your number of lifes")
-			print("/radar to change the number of seconds to complete a turn")
+			print("/radar_time to change the number of seconds to complete a turn")
+			print("/radar_range to change the range to see enemies")
 			entry = input()
 			if entry == "/n_dots":
 				print("current number: "+str(self.n_dots))
@@ -217,10 +219,14 @@ class Py1bitSub:
 				print("current number: "+str(self.lifes))
 				print("enter the number of lifes")
 				self.lifes = int(input())
-			elif entry == "/radar":
+			elif entry == "/radar_time":
 				print("current number: "+str(self.time_radar/self.FPS))
 				print("enter the number of lifes")
 				self.time_radar = self.FPS * int(input())
+			elif entry == "/radar_range":
+				print("current number: "+str(self.range_radar))
+				print("enter the number of lifes")
+				self.range_radar = int(input())
 		print("settings have been saved, you can go back to the game")
 
 
