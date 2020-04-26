@@ -12,6 +12,8 @@ class Py1bitSub:
 		self.height = height
 		self.win = pygame.display.set_mode((width, height))
 		pygame.display.set_caption(title)
+		icon = pygame.image.load("icon.png")
+		pygame.display.set_icon(icon)
 
 		self.clock = pygame.time.Clock()
 		self.running = True
